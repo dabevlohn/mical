@@ -13,67 +13,37 @@ fn main() -> Result<()> {
     let conn = Connection::open_in_memory()?;
 
     // conn.execute_batch(
-    //     r"COPY 'users.csv'
+    //     r"CREATE TABLE person AS (SELECT *
+    //       FROM read_csv('users.csv',
+    //       delim = ',',
+    //       quote = '',
+    //       escape = '',
+    //       header = false,
+    //       ignore_errors = true,
+    //       columns = {
+    //           'fio': 'VARCHAR',
+    //           'username': 'VARCHAR',
+    //           'email': 'VARCHAR'
+    //       }));
+    //     ",
+    // )?;
+
+    // conn.execute_batch(
+    //     r"COPY (SELECT * FROM person)
     //       TO   'users_zstd.parquet'
     //       (FORMAT PARQUET, COMPRESSION ZSTD);
     //     ",
     // )?;
 
-    // conn.execute_batch(
-    //     r"COPY 'users.csv'
-    //       TO   'users_lz4.parquet'
-    //       (FORMAT PARQUET, COMPRESSION LZ4);
-    //     ",
-    // )?;
-
-    // conn.execute_batch(
-    //     r"COPY 'users.csv'
-    //       TO   'users.parquet'
-    //       (FORMAT PARQUET, CODEC 'uncompressed');
-    //     ",
-    // )?;
-
-    // let mut stmt = conn.prepare(
-
-    conn.execute_batch(
-        r"CREATE TABLE person AS (SELECT *
-          FROM read_csv('users.csv',
-          delim = ',',
-          quote = '',
-          escape = '',
-          header = false,
-          ignore_errors = true,
-          columns = {
-              'fio': 'VARCHAR',
-              'username': 'VARCHAR',
-              'email': 'VARCHAR'
-          }));
-        ",
-    )?;
-
-    // conn.execute_batch(
-    //     r"COPY (SELECT * FROM person)
-    //       TO   'users.parquet'
-    //       (FORMAT PARQUET, CODEC 'uncompressed');
-    //     ",
-    // )?;
-
-    conn.execute_batch(
-        r"COPY (SELECT * FROM person)
-          TO   'users_zstd.parquet'
-          (FORMAT PARQUET, COMPRESSION ZSTD);
-        ",
-    )?;
-
     // let mut stmt = conn.prepare(
     //     r"SELECT *
-    //       FROM read_parquet('users.parquet');
+    //       FROM read_parquet('users_zstd.parquet');
     //     ",
     // )?;
 
     let mut stmt = conn.prepare(
         r"SELECT *
-          FROM read_parquet('users_zstd.parquet');
+          FROM read_parquet('http://storage-bucket.web.garage.tld:3902/users_zstd.parquet');
         ",
     )?;
 
