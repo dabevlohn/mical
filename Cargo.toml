@@ -2,9 +2,11 @@
 name = "mical"
 version = "0.1.0"
 edition = "2021"
+publish = ["kellnr"]
 
 [dependencies]
 chrono = "0.4.38"
+duckdb = { version = "1.1.1", features = ["bundled", "csv", "json", "parquet"] }
 ical = { version = "0.11.0", features = ["ical", "generator"] }
 regex = "1.10.6"
 uuid = { version = "1.10.0", features = ["v4"] }
